@@ -24,6 +24,7 @@ namespace StudentExercisesWebApp.Models
         public int CohortId { get; set; }
 
         public virtual Cohort Cohort { get; set; }
+        [Display(Name = "Assigned Exercise/s...")]
         public virtual ICollection<StudentExercise> StudentExercises { get; set; }
     }
 }
