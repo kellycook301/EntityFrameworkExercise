@@ -37,7 +37,10 @@ namespace StudentExercisesWebApp.Controllers
 
             var student = await _context.Students
                 .Include(s => s.Cohort)
-                .FirstOrDefaultAsync(m => m.StudentId == id);
+                .Include(s => s.StudentExercises)
+                    .ThenInclude(se => se.Exercise)
+                .FirstOrDefaultAsync(s => s.StudentId == id);
+
             if (student == null)
             {
                 return NotFound();
@@ -49,7 +52,6 @@ namespace StudentExercisesWebApp.Controllers
         // GET: Students/Create
         public IActionResult Create()
         {
-            ViewData["CohortId"] = new SelectList(_context.Cohorts, "CohortId", "Name");
             CreateStudentViewModel model = new CreateStudentViewModel(_context);
             return View(model);
         }
@@ -77,7 +79,6 @@ namespace StudentExercisesWebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CohortId"] = new SelectList(_context.Cohorts, "CohortId", "Name", model.Student.CohortId);
             return View(model);
         }
 
@@ -144,7 +145,7 @@ namespace StudentExercisesWebApp.Controllers
 
             var student = await _context.Students
                 .Include(s => s.Cohort)
-                .FirstOrDefaultAsync(m => m.StudentId == id);
+                .FirstOrDefaultAsync(s => s.StudentId == id);
             if (student == null)
             {
                 return NotFound();
